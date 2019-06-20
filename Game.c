@@ -24,10 +24,6 @@
 
 #define NUM_DISCIPLINES 6
 
-// Game newGame (int discipline[], int dice[]) {
-// 	//actually modify shit in Game.c, yeah!!!
-// }
-
 struct player {
 	//The number of students of each discipline the player has.
 	//The numTHD value is completely irrelevant though.
@@ -37,7 +33,8 @@ struct player {
 	//How many of each student the player can be expected to produce each turn
 	//based on our probability estimates (e.g chance rolling a 7 is 16% = 0.16, etc.).
 	//I'm not sure we need this but it would be useful for the AI.
-	double produceResources[NUM_DISCIPLINES];
+	//double produceResources[NUM_DISCIPLINES];
+
 	//The number of other resources the player has.
 	int numKPI;
 	int numCampus;
@@ -46,18 +43,18 @@ struct player {
 	int numARC;
 	int numPatent;
 	int numPublication;
-	int exchangeRate;
+	int exchangeRate[NUM_DISCIPLINES][NUM_DISCIPLINES];
+	// I need to know how 2D arrays work.
 	//Note: integer is not enough info
 };
 
 //g->PlayerOne.resources[THD] += 1;
-
-typedef struct _game {
+struct _game {
 
 	//Note: currentTurn starts off as -1
 	int currentTurn;
 	int currentScore;
-	char whoseTurn;
+	int whoseTurn;
 	struct player playerOne;
 	struct player playerTwo;
 	struct player playerThree;
@@ -67,7 +64,7 @@ typedef struct _game {
 	// Vertex vertices[100];
 	// Hexagon hexagons[NUM_REGIONS];
 	// int **lol; //Points to a pointer, I think
-} game;
+};
 // Why does this throw an error? 
 // redefinition of typedef game is a C11 feature
 
@@ -83,12 +80,114 @@ typedef struct _game {
 // going from the top of each column to the bottom before moving 
 // to the next column to the right.
 
-Game newGame (int discipline[], int dice[]);
+Game newGame (int discipline[], int dice[]) {
+	// do stuff
+	Game g = malloc(sizeof(game));
+	g->currentTurn = -1;
+	//g->currentScore = 0;
+	//Is this right?
+	g->whoseTurn = NO_ONE;
+
+	// g->playerOne = malloc(sizeof(struct player));
+	// g->playerTwo = malloc(sizeof(struct player));
+	// g->playerThree = malloc(sizeof(struct player));
+
+	g->playerOne.resources[STUDENT_THD] = 0;
+	g->playerOne.resources[STUDENT_BPS] = 3;
+	g->playerOne.resources[STUDENT_BQN] = 3;
+	g->playerOne.resources[STUDENT_MJ] = 1;
+	g->playerOne.resources[STUDENT_MTV] = 1;
+	g->playerOne.resources[STUDENT_MMONEY] = 1;
+
+	g->playerTwo.resources[STUDENT_THD] = 0;
+	g->playerTwo.resources[STUDENT_BPS] = 3;
+	g->playerTwo.resources[STUDENT_BQN] = 3;
+	g->playerTwo.resources[STUDENT_MJ] = 1;
+	g->playerTwo.resources[STUDENT_MTV] = 1;
+	g->playerTwo.resources[STUDENT_MMONEY] = 1;
+
+	g->playerThree.resources[STUDENT_THD] = 0;
+	g->playerThree.resources[STUDENT_BPS] = 3;
+	g->playerThree.resources[STUDENT_BQN] = 3;
+	g->playerThree.resources[STUDENT_MJ] = 1;
+	g->playerThree.resources[STUDENT_MTV] = 1;
+	g->playerThree.resources[STUDENT_MMONEY] = 1;
+
+	g->playerOne.numKPI = 20;
+	g->playerTwo.numKPI = 20;
+	g->playerThree.numKPI = 20;
+
+	g->playerOne.numCampus = 2;
+	g->playerTwo.numCampus = 2;
+	g->playerThree.numCampus = 2;
+
+	g->playerOne.numCampus = 0;
+	g->playerTwo.numCampus = 0;
+	g->playerThree.numCampus = 0;
+
+	g->playerOne.numIP = 0;
+	g->playerTwo.numIP = 0;
+	g->playerThree.numIP = 0;
+
+	g->playerOne.numPublication = 0;
+	g->playerTwo.numPublication = 0;
+	g->playerThree.numPublication = 0;
+
+	g->playerOne.numPatent = 0;
+	g->playerTwo.numPatent = 0;
+	g->playerThree.numPatent = 0;
+
+	g->playerOne.numARC = 0;
+	g->playerTwo.numARC = 0;
+	g->playerThree.numARC = 0;
+
+	g->playerOne.numG08 = 0;
+	g->playerTwo.numG08 = 0;
+	g->playerThree.numG08 = 0;
+	
+	// Why do none of these work?
+	int i = 0;
+	int j = 0;
+	int uni = 1;
+	while (uni < NUM_UNIS + 1) {
+		i = 0;
+		j = 0;
+		while (i < NUM_DISCIPLINES) {
+			while (j < NUM_DISCIPLINES) {
+				if (uni == UNI_A) {
+					g->playerOne.exchangeRate[i][j] = 3;
+				} else if (uni == UNI_B) {
+					g->playerTwo.exchangeRate[i][j] = 3;
+				} else if (uni == UNI_C) {
+					g->playerThree.exchangeRate[i][j] = 3;
+				}
+				j++;
+			}
+			i++;
+			j = 0;
+		}
+		uni++;
+	}
+
+	/*g->playerOne.exchangeRate = {{3}, {3}, {3}, {3}, {3}, {3}};
+	g->playerTwo.exchangeRate = {{3}};
+	g->playerThree.exchangeRate[NUM_DISCIPLINES][NUM_DISCIPLINES] = {3, 3, 3, 3, 3, 3,};*/
+
+
+	// initialise all variables
+	// assign memory to your players
+	// initialises all vars for player as well.
+	return g;
+}
 
 // free all the memory malloced for the game
 void disposeGame (Game g) {
 	// Is double-check that this is how you do this?
-	//free(g);
+	/*
+	free(g->playerOne);
+	free(g->playerTwo);
+	free(g->playerThree);
+	free(g);*/
 	//however the above line causes an error
 	// which is implicit declaration of funtion free
 }
@@ -98,16 +197,48 @@ void disposeGame (Game g) {
 // The function may assume that the action requested is legal.
 // START_SPINOFF is not a legal action here
 void makeAction (Game g, action a) {
+	printf("Making action %d for player %d", a.actionCode, g->whoseTurn);
 	//Will be second hardest function to write after isLegalAction
 	//Does something for each action
-
-	if (a.actionCode == PASS) {
-		//do something
+	struct player *playerDirectory;
+	if (g->whoseTurn == UNI_A) {
+		playerDirectory = &g->playerOne;
+	} else if (g->whoseTurn == UNI_B) {
+		playerDirectory = &g->playerTwo;
+	} else if (g->whoseTurn == UNI_C) {
+		playerDirectory = &g->playerThree;
+	} else {
+		perror("Error: No valid player for calling makeAction.\n");
+		//Does return nothing throw an error?
+		return;
+	}
+	if (a.actionCode == PASS) { 
+		g->whoseTurn += 1;
+		// For UNI_C to go back to UNI_A
+		if (g->whoseTurn > 3) {
+			g->whoseTurn -= 3;
+		}
 	} else if (a.actionCode == BUILD_CAMPUS) {
-		//do something else
+		// below line throws an error
+		//char[PATH_LIMIT] = a.destination;
+		//I CANNOT DO THIS BECAUSE I HAVE NO GRID TO CHANGE!!!
 	} else if (a.actionCode == BUILD_GO8) {
 		//do something else
-	} //et cetera
+	} else if (a.actionCode == OBTAIN_ARC) {
+		//do something else
+	} else if (a.actionCode == OBTAIN_PUBLICATION) {
+		playerDirectory->numPublication += 1;
+
+	} else if (a.actionCode == OBTAIN_IP_PATENT) {
+		playerDirectory->numIP += 1;
+		playerDirectory->numKPI += 10;
+	} else if (a.actionCode == RETRAIN_STUDENTS) {
+		int from = a.disciplineFrom;
+		int to = a.disciplineTo;
+		int rate = playerDirectory->exchangeRate[from][to];
+		playerDirectory->resources[from] -= rate;
+		playerDirectory->resources[to] += 1;
+	}
 }
 
 // advance the game to the next turn, 
@@ -141,7 +272,9 @@ int getTurnNumber (Game g);
 
 // return the player id of the player whose turn it is 
 // the result of this function is NO_ONE during Terra Nullis
-int getWhoseTurn (Game g);
+int getWhoseTurn (Game g) {
+	return g->whoseTurn;
+}
 
 // return the contents of the given vertex (ie campus code or 
 // VACANT_VERTEX)
@@ -180,7 +313,8 @@ int isLegalAction (Game g, action a) {
 	//checks if any given action is legal or not
 	int isLegal = TRUE;
 	if (a.actionCode == PASS) {
-		//do nothing - of course you can pass
+		//checks that there are sufficient resources
+		//But I need to know which player struct to select
 	} else if (a.actionCode == BUILD_CAMPUS) {
 		//do something - checks path, resources etc.
 	} else if (a.actionCode == BUILD_GO8) {
@@ -262,6 +396,7 @@ int getPublications (Game g, int player) {
 	} else if (player == UNI_C) {
 		publications = g->playerThree.numPublication;
 	}
+	return publications;
 }
 
 // return the number of students of the specified discipline type 
@@ -284,6 +419,6 @@ int getStudents (Game g, int player, int discipline) {
 // on what retraining centers, if any, they have a campus at.
 int getExchangeRate (Game g, int player, 
                      int disciplineFrom, int disciplineTo) {
-
+	return -1;
 }
 

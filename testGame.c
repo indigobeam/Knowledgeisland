@@ -46,14 +46,13 @@ int main(int argc, char *argv[]) {
     assert(getKPIpoints(g, UNI_C) == 20);
 
     //asserts that no-one has any arcs/paths at the start of the game
-    assert(getARCs(g, UNI_A) == 0);
-    assert(getARCs(g, UNI_B) == 0);
-    assert(getARCs(g, UNI_C) == 0);
+    assert(getARC(g, "RRLR") == VACANT_ARC);
+    assert(getARC(g, "RRRR") == VACANT_ARC);
 
     // Everyone starts off with 2 campuses
-    assert(getCampuses(g, UNI_A) == 2);
-    assert(getCampuses(g, UNI_B) == 2);
-    assert(getCampuses(g, UNI_C) == 2);
+    assert(getCampus(g, "LRLRLLRLRL") == VACANT_VERTEX);
+    assert(getCampus(g, "LRLRLLRLRR") == VACANT_VERTEX);
+    assert(getCampus(g, "LRLRLLRLRB") == VACANT_VERTEX);
 
     // Everyone starts with no IPs
     assert(getIPs(g, UNI_A) == 0);
