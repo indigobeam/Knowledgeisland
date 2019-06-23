@@ -35,7 +35,8 @@ int main () {
 
         makeAction(g, move);
      } 
-	 if (getKPIpoints(g, player) >= 120){ //DONE
+	if (move.actionCode == PASS){
+	if (getKPIpoints(g, player) >= 120){ //DONE
 		 //checks if the game has been won yet
 		 printf("game over. Player %1 one", currentPlayer);
 		 //makes the game end
@@ -46,6 +47,7 @@ int main () {
 	 } else {
 		 whoseTurn = 1;
 	 } 
+	}
 } 
     return EXIT_SUCCESS;
 }
