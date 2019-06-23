@@ -6,22 +6,23 @@ int rollDice(void);
 int main () {
     Game g = newGame (disciplines, dice);
 	while (gameNotOver){
-    srand ( time(NULL) );
     int diceValue = 0;
 	diceValue = rollDice() + rollDice();
-    //printf("%d this is in main\n", diceValue);
-	//test for if function was being called correctly   
-    
-    action move; //human or mechanicalTurk(AI) decide what they want to do     
+  
+    //human or mechanicalTurk(AI) decide what they want to do     
     //loop until player action is PASS or player wins     
     while (turn is not over and game not over) { 
 		scanf("%d",&move);
         move = decideAction(g); 
-        //assert that action is legal 
+        assert(isLegalAction(g, move)); //assert that action is legal 
+
         if (move.actionCode == START_SPINOFF) { 
-             if ( rand() % 3 + 1 = 3){
-					action
-        }
+				if (rollDice()/2 <= 2) {
+					move.actionCode = OBTAIN_PUBLICATION;
+				} else {
+					move.actionCode = OBTAIN_IP_PATENT;
+}
+
         makeAction(g, move);
      } 
 } 
@@ -34,10 +35,9 @@ int main () {
 
 int rollDice(){
     int value;
-    
+    srand ( time(NULL) );
     value = 1+ rand() % 6 ;
-    //printf ("%d this is in rollDice\n", val);
-    //test for if function was being called correctly
+	delay();
 
     return value;
 }
