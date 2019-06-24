@@ -166,10 +166,25 @@ int main(int argc, char *argv[]) {
 
     action retrain;
 	retrain.actionCode = RETRAIN_STUDENTS;
+    retrain.disciplineTo = STUDENT_MMONEY;
+
+    // tests user is not allowed to retrain STUDENT_MJ because there
+    // are less than 3 of them
 	retrain.disciplineFrom = STUDENT_MJ;
-	retrain.disciplineTo = STUDENT_MMONEY;
+    assert(isLegalAction(g, retrain) == FALSE);
+
+    // tests that retraining STUDENT_BPS is allowed
+    retrain.disciplineFrom = STUDENT_BPS;
 	assert(isLegalAction(g, retrain) == TRUE);
 	makeAction(g,retrain);
+
+    // tests that our resources have changed correctly
+    assert(getStudents(g, UNI_A, STUDENT_THD) == 0);
+    assert(getStudents(g, UNI_A, STUDENT_BPS) == 0);
+    assert(getStudents(g, UNI_A, STUDENT_BQN) == 3);
+    assert(getStudents(g, UNI_A, STUDENT_MJ) == 1);
+    assert(getStudents(g, UNI_A, STUDENT_MTV) == 1);
+    assert(getStudents(g, UNI_A, STUDENT_MMONEY) == 2);
 
 	action arc;
 	arc.actionCode = OBTAIN_ARC;
